@@ -54,10 +54,14 @@ class Solution:
 						return False
 					sTracker = nextSTracker
 				else:
-					for nextSTracker, c in enumerate(s[sTracker :]):
+					for i, c in enumerate(s[sTracker + 1 :]):
+						print(c, i)
 						if c != lastSChar:
-							sTracker = nextSTracker
+							sTracker = i
+							print("d")
 							break
+						if i == len(s):
+							return True
 			else:
 				sTracker += 1
 		return False
