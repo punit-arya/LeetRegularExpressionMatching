@@ -38,14 +38,17 @@ It is guaranteed for each appearance of the character '*', there will be a previ
 class Solution:
 
 	def isMatch(self, s: str, p: str) -> bool:
-		lastPChar = ""
+		lastPChar = "*"
 		lastSChar = ""
 		sTracker = 0
+		flag = 0
 		for pIndex, pChar in enumerate(p):
+			# print("pIndex:", pIndex, "pChar:", pChar)
 			if pChar == ".":
 				sTracker += 1
 				lastPChar = pChar
 			elif pChar == "*":
+				sTracker -= 1
 				if lastPChar == ".":
 					if pIndex == len(p) - 1:
 						return True
@@ -53,17 +56,28 @@ class Solution:
 					if nextSTracker == -1:
 						return False
 					sTracker = nextSTracker
+					lastPChar = pChar
 				else:
-					for i, c in enumerate(s[sTracker + 1 :]):
-						print(c, i)
+					for i, c in enumerate(s[pIndex - 1 :]):
+						# print("IN THE LOOP")
+						# print("c:", c, "lastSChar:", lastSChar, "i:", i)
 						if c != lastSChar:
-							sTracker = i
-							print("d")
+							if pIndex == len(p) - 1:
+								return False
+							# flag = 1
 							break
-						if i == len(s):
-							return True
+						sTracker = i
+						# print("sTracker:", sTracker)
+					# if flag == 0:
+					else:
+						return True
 			else:
+				# print("s[sTracker]:", s[sTracker], "sTracker:", sTracker)
+				if pChar != s[sTracker] and lastPChar != "*":
+					return False
 				sTracker += 1
+				lastPChar = pChar
+				lastSChar = s[sTracker]
 		return False
 
 
@@ -71,3 +85,6 @@ if __name__ == "__main__":
 	print("Solution.isMatch(None, \"aa\", \"a\"):", Solution.isMatch(None, "aa", "a"))
 	print("Solution.isMatch(None, \"aa\", \"a*\"):", Solution.isMatch(None, "aa", "a*"))
 	print("Solution.isMatch(None, \"ab\", \".*\"):", Solution.isMatch(None, "ab", ".*"))
+	print("Solution.isMatch(None, \"mississippi\", \"mis*is*p*.\"):", Solution.isMatch(None, "mississippi", "mis*is*p*."))
+	print("Solution.isMatch(None, \"aab\", \"c*a*b\"):", Solution.isMatch(None, "aab", "c*a*b"))
+	print("Solution.isMatch(None, \"mississippi\", \"mis*is*p*.\"):", Solution.isMatch(None, "mississippi", "mis*is*ip*."))
